@@ -4,7 +4,7 @@ set(CMAKE_C_STANDARD 11)
 
 project(http-server VERSION 1.0 LANGUAGES C)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/../lib ${CMAKE_BINARY_DIR}/../build)
+add_subdirectory(${CMAKE_SOURCE_DIR}/../lib ${CMAKE_SOURCE_DIR}/../build)
 
 add_executable(http-server main.c)
 
