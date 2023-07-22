@@ -8,4 +8,4 @@
 #include <netinet/in.h>
 #include <pthread.h>
 
-#include "build/config.h"
+#include "config.h"
