@@ -10,5 +10,5 @@ include_directories(${CMAKE_SOURCE_DIR}/../lib)
 
 target_include_directories(http-server PUBLIC ${CMAKE_SOURCE_DIR}/../lib)
 
-target_link_libraries(http-server /home/benggee/app/c-program/cmake/lib/mylib/libmylib.a)
+target_link_libraries(http-server /home/benggee/app/c-program/cmake/lib/mylib/libmylib.so)
 target_link_libraries(http-server pthread)
