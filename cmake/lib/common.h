@@ -8,4 +8,4 @@
 #include <netinet/in.h>
 #include <pthread.h>
 
-#define WORKER_POOL_SIZE 5
+#include "build/config.h"

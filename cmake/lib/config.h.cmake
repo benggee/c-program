@@ -1,0 +1,1 @@
+#cmakedefine WORKER_POOL_SIZE @WORKER_POOL_SIZE@
