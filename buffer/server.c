@@ -8,15 +8,18 @@
 #include <string.h>
 #include <strings.h>
 #include <errno.h>
+#include "buffer.h"
 
+#define  LINE_SIZE 1024
 
 int create_sock();
+
+void read_from_buffer(int sock_fd);
 
 int main(int argc, char *argv[]) {
 
     int sock_fd = create_sock();
-    char buf[1024];
-
+    int ret;
     struct sockaddr_in client_addr;
 
     while(1) {
@@ -29,23 +32,16 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
 
-        bzero(buf, sizeof(buf));
-
-        int ret = read(fd, buf, sizeof(buf));
-       // int ret = recv(fd, buf, sizeof(buf), 0);
-        if (ret < 0) {
-            perror("recv error");
-            exit(1);
-        }
-        if (ret == 0) {
-            printf("client closed \n");
-            close(fd);
-            continue;
-        }
-
-        printf("recv: %s\n", buf);
+        read_from_buffer(fd);
     }
+}
 
+void read_from_buffer(int sock_fd) {
+    struct buffer *buf = new_buffer();
+
+    buffer_read_from_socket(buf, sock_fd);
+
+    printf("data: %s\n", buf->data);
 }
 
 int create_sock() {

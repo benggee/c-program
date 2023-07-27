@@ -31,5 +31,6 @@ int main(int argc, char *argv[]) {
         memset(buf, 0, sizeof(buf));
         fgets(buf, sizeof(buf), stdin);
         write(sock_fd, buf, sizeof(buf));
+        printf("write done.\n");
     }
 }
