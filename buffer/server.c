@@ -2,24 +2,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/socket.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <string.h>
-#include <strings.h>
-#include <errno.h>
 #include "buffer.h"
-
-#define  LINE_SIZE 1024
 
 int create_sock();
 
-void read_from_buffer(int sock_fd);
+void request_with_buffer(int sock_fd);
+
+void response_with_buffer(int sock_fd);
+
+void on_http_request(int sock_fd);
 
 int main(int argc, char *argv[]) {
 
     int sock_fd = create_sock();
-    int ret;
     struct sockaddr_in client_addr;
 
     while(1) {
@@ -32,16 +29,42 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
 
-        read_from_buffer(fd);
+        on_http_request(fd);
     }
 }
 
-void read_from_buffer(int sock_fd) {
+void on_http_request(int sock_fd) {
+    request_with_buffer(sock_fd);
+
+    response_with_buffer(sock_fd);
+
+    close(sock_fd);
+}
+
+void request_with_buffer(int sock_fd) {
     struct buffer *buf = new_buffer();
 
     buffer_read_from_socket(buf, sock_fd);
 
-    printf("data: %s\n", buf->data);
+    printf("%s\n", buf->data);
+
+    buffer_free(buf);
+}
+
+void response_with_buffer(int sock_fd) {
+    struct buffer *buf = new_buffer();
+
+    buffer_append(buf, "HTTP/1.1 200 OK\r\n", strlen("HTTP/1.1 200 OK\r\n"));
+    buffer_append(buf, "Host: 127.0.0.1:3000\r\n", strlen("Host: 127.0.0.1:3000\r\n"));
+    buffer_append(buf, "Content-Type: text/html; charset=UTF-8\r\n", strlen("Content-Type: text/html; charset=UTF-8\r\n"));
+    buffer_append(buf, "\r\n", strlen("\r\n"));
+
+    char *body = "<html><head><title>hello</title></head><body><h1>This is My HTTP Server</h1></body></html>";
+    buffer_append(buf, body, strlen(body));
+
+    buffer_write_to_socket(buf, sock_fd);
+
+    buffer_free(buf);
 }
 
 int create_sock() {
@@ -62,6 +85,8 @@ int create_sock() {
     bind(sock_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr));
 
     listen(sock_fd, 1024);
+
+    printf("Server is running at: %d\n", 3000);
 
     return sock_fd;
 }

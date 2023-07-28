@@ -1,5 +1,5 @@
 
-#define BUFFER_SIZE 4096
+#define BUFFER_SIZE 65535
 
 struct buffer {
     char *data; // bufer data
@@ -10,8 +10,10 @@ struct buffer {
 
 struct buffer *new_buffer();
 
-void free_buffer(struct buffer *buf);
+void buffer_free(struct buffer *buf);
 
-void buffer_allocation(struct buffer *buf, void *data, int size);
+int buffer_append(struct buffer *buf, char *data, size_t len);
 
 int buffer_read_from_socket(struct buffer *buf, int sock_fd);
+
+int buffer_write_to_socket(struct buffer *buf, int sock_fd);
