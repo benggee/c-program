@@ -30,15 +30,7 @@ char buffer_read_char(struct buffer *buf) {
         return '\0';
     }
 
-    int r_idx = 0;
-    if (buf->w_idx > buf->r_idx) {
-        r_idx = buf->w_idx - buf->r_idx;
-    } else if (buf->size - buf->r_idx < BUFFER_SIZE) {
-        r_idx = buf->size - buf->r_idx;
-    } else {
-        r_idx = BUFFER_SIZE;
-    }
-    char c = buf->data[r_idx];
+    char c = buf->data[buf->r_idx];
     if (buf->r_idx + 1 < buf->size) {
         buf->r_idx++;
     } else {

@@ -47,7 +47,6 @@ int allocation_buffer_map(struct buffer_map *map, int slot) {
         return -1;
     }
 
-    memset(&tmp[map->max_idx], -1, (max_idx - map->max_idx) * sizeof(struct buffer));
     tmp[slot] = s_buf;
 
     map->max_idx = max_idx;
