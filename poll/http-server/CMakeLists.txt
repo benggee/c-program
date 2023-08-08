@@ -6,6 +6,6 @@ project(buffer VERSION 1.0 LANGUAGES C)
 
 file(GLOB SOURCES *.c)
 
-add_executable(server ${SOURCES})
+add_executable(server ${SOURCES} server.c)
 
 target_link_libraries(server pthread)

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tcp_server.h"
-#include "thread_pool.h"
+#include "accepter.h"
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -13,6 +13,6 @@ int main(int argc, char *argv[]) {
 
     printf("server started on port %s\n", argv[1]);
 
-    accepter_thread((void *)&sock_fd);
+    accept_sock(sock_fd);
 }
 
