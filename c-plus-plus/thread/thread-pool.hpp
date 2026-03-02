@@ -1,11 +1,52 @@
-//
-// Created by EDY on 2023/10/10.
-//
+/**
+ * @file thread-pool.hpp
+ * @brief C++11 线程池实现
+ *
+ * 线程池是一种并发设计模式，它维护多个工作线程，
+ * 可以重复使用这些线程来执行任务，避免频繁创建和销毁线程的开销。
+ *
+ * 核心组件：
+ * - 任务队列：存储待执行的任务
+ * - 工作线程：从队列中取出任务并执行
+ * - 互斥锁：保护共享数据
+ * - 条件变量：实现生产者-消费者同步
+ * - std::future：获取任务执行结果
+ *
+ * 使用场景：
+ * - 服务器处理并发请求
+ * - 并行计算
+ * - 异步任务执行
+ */
+
 #include <iostream>
 #include <queue>
 #include <vector>
 #include <future>
+#include <functional>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
+#include <thread>
 
+/**
+ * @brief 线程池类
+ *
+ * 使用示例：
+ * @code
+ * TPool pool;
+ * pool.init(10);              // 初始化 10 个工作线程
+ * pool.start();               // 启动线程池
+ *
+ * // 提交普通函数
+ * pool.exec(func, arg1, arg2);
+ *
+ * // 提交 lambda
+ * auto future = pool.exec([](int x) { return x * 2; }, 21);
+ * int result = future.get();  // 获取结果 (42)
+ *
+ * pool.waitDone();            // 等待所有任务完成
+ * @endcode
+ */
 class TPool {
 public:
     TPool(): m_thread_size(1), m_terminate(false) {};

@@ -1,3 +1,19 @@
+/**
+ * @file select.c
+ * @brief 基于 select() 的 I/O 多路复用 TCP 服务器
+ *
+ * Select 允许单个进程/线程同时监控多个文件描述符 (FD)，
+ * 当其中任何一个或多个 FD 就绪时，select 会返回，
+ * 然后程序可以对就绪的 FD 进行相应的 I/O 操作。
+ *
+ * 工作流程：
+ * 1. 初始化 FD_SET，添加要监控的 FD
+ * 2. 调用 select() 等待任一 FD 就绪
+ * 3. 遍历 FD_SET，检查哪些 FD 已就绪
+ * 4. 处理就绪的 FD (读/写/错误)
+ * 5. 返回步骤 2
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -9,9 +25,16 @@
 #include <errno.h>
 #include <fcntl.h>
 
-
+/**
+ * @brief 创建并配置监听 Socket
+ * @return 成功返回 Socket FD，失败返回 -1
+ */
 int create_sock();
 
+/**
+ * @brief 将 Socket 设置为非阻塞模式
+ * @param sock_fd Socket 文件描述符
+ */
 void make_nonblocking(int sock_fd);
 
 

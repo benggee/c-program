@@ -1,3 +1,21 @@
+/**
+ * @file epoll.c
+ * @brief 基于 epoll 的 I/O 多路复用 TCP 服务器
+ *
+ * Epoll 是 Linux 特有的高性能 I/O 事件通知机制，
+ * 专为处理大量并发连接而设计。
+ *
+ * 核心优势：
+ * - O(1) 时间复杂度：只处理就绪的 FD
+ * - 支持大规模连接：可轻松处理 10 万+ 连接
+ * - 边缘触发 (ET)：减少系统调用次数
+ *
+ * 三大核心函数：
+ * - epoll_create1(): 创建 epoll 实例
+ * - epoll_ctl(): 添加/修改/删除监控的 FD
+ * - epoll_wait(): 等待事件发生
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -10,10 +28,20 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#define MAX_EVENTS 1024
+#define MAX_EVENTS 1024  // epoll_wait 最多返回的事件数
 
+/**
+ * @brief 创建并配置监听 Socket
+ * @return 成功返回 Socket FD，失败返回 -1
+ */
 int create_sock();
 
+/**
+ * @brief 将 Socket 设置为非阻塞模式
+ * @param fd Socket 文件描述符
+ *
+ * 注意：边缘触发 (ET) 模式必须配合非阻塞 I/O 使用
+ */
 void make_nonblocking(int fd);
 
 int main(int argc, char *argv[]) {

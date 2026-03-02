@@ -1,9 +1,24 @@
+/**
+ * @file xstring.hpp
+ * @brief 自定义字符串类，演示 C++11 移动语义 (Move Semantics)
+ *
+ * 移动语义是 C++11 引入的重要特性，允许"转移"资源而不是"拷贝"资源，
+ * 从而大幅提升性能，特别是在处理临时对象时。
+ *
+ * 五种特殊成员函数 (Rule of Five)：
+ * 1. 析构函数
+ * 2. 拷贝构造函数
+ * 3. 拷贝赋值运算符
+ * 4. 移动构造函数 (C++11)
+ * 5. 移动赋值运算符 (C++11)
+ */
+
 #include <stdlib.h>
 #include <string.h>
+#include <iostream>
 
 class xstring
 {
-public:
     size_t len() const {
         return m_len;
     }
